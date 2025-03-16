@@ -1,58 +1,59 @@
 let cart = [];
 
-// Handle the "Add to Cart" button clicks
+// Event listener for "Add to Cart" buttons
 document.querySelectorAll('.add-to-cart').forEach(button => {
-  button.addEventListener('click', (e) => {
-    const itemName = e.target.getAttribute('data-name');
-    const itemPrice = parseInt(e.target.getAttribute('data-price'));
-    
-    // Check if the item already exists in the cart; if so, increase its quantity
-    const existingItem = cart.find(item => item.name === itemName);
-    if (existingItem) {
-      existingItem.quantity++;
+  button.addEventListener('click', () => {
+    const name = button.getAttribute('data-name');
+    const price = parseInt(button.getAttribute('data-price'));
+    const existing = cart.find(item => item.name === name);
+    if (existing) {
+      existing.quantity++;
     } else {
-      cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+      cart.push({ name: name, price: price, quantity: 1 });
     }
     updateCart();
   });
 });
 
-// Update the cart display in the sidebar
+// Update the cart display
 function updateCart() {
-  const cartItemsContainer = document.getElementById('cartItems');
-  const totalAmountElement = document.getElementById('totalAmount');
-  cartItemsContainer.innerHTML = ''; // Clear current cart items
-  let totalAmount = 0;
-  
+  const cartItemsDiv = document.getElementById('cartItems');
+  const cartTotalDiv = document.getElementById('cartTotal');
+  cartItemsDiv.innerHTML = ''; // Clear current items
+  let total = 0;
   cart.forEach((item, index) => {
-    totalAmount += item.price * item.quantity;
-    cartItemsContainer.innerHTML += `
+    total += item.price * item.quantity;
+    // Wrap product name in <strong> to make it bold
+    cartItemsDiv.innerHTML += `
       <div class="cart-item">
-        <span>${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh</span>
-        <button class="increase-qty" data-index="${index}">+</button>
-        <button class="decrease-qty" data-index="${index}">-</button>
+        <span><strong>${item.name}</strong> (x${item.quantity}) - ${item.price * item.quantity} Ksh</span>
+        <div>
+          <button class="decrease" data-index="${index}">-</button>
+          <button class="increase" data-index="${index}">+</button>
+        </div>
       </div>
     `;
   });
-  
-  totalAmountElement.textContent = totalAmount;
+  cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
 }
 
-// Adjust quantity in the cart using + and - buttons
+// Handle quantity adjustments in the cart
 document.getElementById('cartItems').addEventListener('click', (e) => {
   const index = e.target.getAttribute('data-index');
-  if (e.target.classList.contains('increase-qty')) {
-    cart[index].quantity++;
-  }
-  if (e.target.classList.contains('decrease-qty')) {
+  if (e.target.classList.contains('decrease')) {
     if (cart[index].quantity > 1) {
       cart[index].quantity--;
+    } else {
+      cart.splice(index, 1);
     }
+  }
+  if (e.target.classList.contains('increase')) {
+    cart[index].quantity++;
   }
   updateCart();
 });
 
 // Place Order button handler
 document.getElementById('placeOrder').addEventListener('click', () => {
-  alert('Order placed! Total: ' + document.getElementById('totalAmount').textContent + ' Ksh');
+  alert('Order placed! Total: ' + document.getElementById('cartTotal').textContent);
 });
