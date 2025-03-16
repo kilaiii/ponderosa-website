@@ -41,6 +41,10 @@
         .item img {
             width: 100%;
             border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .item img:hover {
+            transform: scale(1.1);
         }
         .contact {
             margin-top: 20px;
@@ -58,47 +62,43 @@
             border-radius: 5px;
             font-weight: bold;
         }
+
+        /* Place your order section */
         .order-section {
             background-color: #fff;
             padding: 20px;
-            margin: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .order-section input {
-            width: 50px;
-            text-align: center;
-        }
-        .order-section select {
-            margin: 10px 0;
-            padding: 5px;
-        }
-        .order-section button {
-            background-color: #ffcc00;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .order-section button:hover {
-            background-color: #e6b800;
-        }
-        .order-summary {
             margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f8f8;
             border-radius: 10px;
-            text-align: left;
-            max-width: 500px;
-            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .order-summary h3 {
-            margin-bottom: 15px;
+        .order-section h2 {
+            margin-bottom: 20px;
         }
-        .order-summary p {
-            margin: 5px 0;
+        .order-item {
+            margin-bottom: 10px;
+        }
+        .order-item label {
+            font-weight: bold;
+        }
+        .order-item select {
+            padding: 5px;
+            margin-top: 5px;
+        }
+        .order-item input {
+            padding: 5px;
+            margin-top: 5px;
+            width: 50px;
+        }
+        .total {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .delivery-type {
+            margin-top: 20px;
+        }
+        .delivery-type label {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -113,12 +113,12 @@
         <p>Price: 100 Ksh</p>
     </div>
     <div class="item">
-        <img src="juice_small.jpg" alt="Juice (Small)">
+        <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice">
         <h3>Juice (Small)</h3>
         <p>Price: 50 Ksh</p>
     </div>
     <div class="item">
-        <img src="juice_large.jpg" alt="Juice (Large)">
+        <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice">
         <h3>Juice (Large)</h3>
         <p>Price: 100 Ksh</p>
     </div>
@@ -132,37 +132,59 @@
 <!-- Place Your Order Section -->
 <div class="order-section">
     <h2>Place Your Order</h2>
-    <form id="order-form">
-        <div>
-            <label for="chips-quantity">Chips (100 Ksh each):</label>
-            <input type="number" id="chips-quantity" value="0" min="0" max="10">
-        </div>
-        <div>
-            <label for="small-juice-quantity">Small Juice (50 Ksh each):</label>
-            <input type="number" id="small-juice-quantity" value="0" min="0" max="10">
-        </div>
-        <div>
-            <label for="large-juice-quantity">Large Juice (100 Ksh each):</label>
-            <input type="number" id="large-juice-quantity" value="0" min="0" max="10">
-        </div>
-        <div>
-            <label for="sausage-quantity">Sausage (50 Ksh each):</label>
-            <input type="number" id="sausage-quantity" value="0" min="0" max="10">
-        </div>
-        <div>
-            <button type="button" onclick="calculateTotal()">Calculate Total</button>
-        </div>
-    </form>
-    <div class="order-summary" id="order-summary" style="display:none;">
-        <h3>Order Summary</h3>
-        <p id="chips-summary">Chips: 0 x 100 Ksh = 0 Ksh</p>
-        <p id="small-juice-summary">Small Juice: 0 x 50 Ksh = 0 Ksh</p>
-        <p id="large-juice-summary">Large Juice: 0 x 100 Ksh = 0 Ksh</p>
-        <p id="sausage-summary">Sausage: 0 x 50 Ksh = 0 Ksh</p>
-        <hr>
-        <p><b>Total: <span id="total-price">0</span> Ksh</b></p>
-        <a href="https://wa.me/254745798700" class="whatsapp-btn">Order on WhatsApp</a>
+
+    <div class="order-item">
+        <label for="chips">Chips:</label>
+        <select id="chips">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
     </div>
+
+    <div class="order-item">
+        <label for="small-juice">Juice (Small):</label>
+        <select id="small-juice">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+
+    <div class="order-item">
+        <label for="large-juice">Juice (Large):</label>
+        <select id="large-juice">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+
+    <div class="order-item">
+        <label for="sausage">Sausage:</label>
+        <select id="sausage">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+
+    <div class="delivery-type">
+        <label for="delivery">Choose Delivery Type:</label>
+        <select id="delivery">
+            <option value="0">Pick-Up</option>
+            <option value="50">Home Delivery (50 Ksh)</option>
+        </select>
+    </div>
+
+    <div class="total">
+        Total: <span id="total">0 Ksh</span>
+    </div>
+    <button id="order-button" class="whatsapp-btn">Place Order</button>
 </div>
 
 <div class="contact">
@@ -171,38 +193,54 @@
     <p>📞 To place an order, Call: <a href="tel:+254729099515" style="color: white;">0729099515</a></p>
     <p>🚚 For Delivery Call: <a href="tel:+254745798700" style="color: white;">0745798700</a></p>
     <p>💰 Delivery Fee: <b>50 Ksh</b></p>
-    <p>PLACE YOUR ORDER NOW WE DELIVER IN MINUTES</p>
+    <p>PLACE YOUR ORDER NOW, WE DELIVER IN MINUTES!</p>
+    <p><b>PONDEROSA - The best chips vendor in Mikindani</b></p>
+    <a href="https://wa.me/254745798700" class="whatsapp-btn">Order on WhatsApp</a>
 </div>
 
 <script>
-    function calculateTotal() {
-        const chipsPrice = 100;
-        const smallJuicePrice = 50;
-        const largeJuicePrice = 100;
-        const sausagePrice = 50;
+    const prices = {
+        chips: 100,
+        smallJuice: 50,
+        largeJuice: 100,
+        sausage: 50,
+        delivery: 50,
+    };
 
-        const chipsQuantity = document.getElementById('chips-quantity').value;
-        const smallJuiceQuantity = document.getElementById('small-juice-quantity').value;
-        const largeJuiceQuantity = document.getElementById('large-juice-quantity').value;
-        const sausageQuantity = document.getElementById('sausage-quantity').value;
+    const chipsSelect = document.getElementById("chips");
+    const smallJuiceSelect = document.getElementById("small-juice");
+    const largeJuiceSelect = document.getElementById("large-juice");
+    const sausageSelect = document.getElementById("sausage");
+    const deliverySelect = document.getElementById("delivery");
+    const totalElement = document.getElementById("total");
 
-        const chipsTotal = chipsPrice * chipsQuantity;
-        const smallJuiceTotal = smallJuicePrice * smallJuiceQuantity;
-        const largeJuiceTotal = largeJuicePrice * largeJuiceQuantity;
-        const sausageTotal = sausagePrice * sausageQuantity;
+    // Function to update total
+    function updateTotal() {
+        const chipsQuantity = parseInt(chipsSelect.value);
+        const smallJuiceQuantity = parseInt(smallJuiceSelect.value);
+        const largeJuiceQuantity = parseInt(largeJuiceSelect.value);
+        const sausageQuantity = parseInt(sausageSelect.value);
+        const deliveryFee = parseInt(deliverySelect.value);
 
-        const total = chipsTotal + smallJuiceTotal + largeJuiceTotal + sausageTotal;
+        const total = (chipsQuantity * prices.chips) + 
+                      (smallJuiceQuantity * prices.smallJuice) + 
+                      (largeJuiceQuantity * prices.largeJuice) + 
+                      (sausageQuantity * prices.sausage) + 
+                      deliveryFee;
 
-        document.getElementById('chips-summary').textContent = `Chips: ${chipsQuantity} x 100 Ksh = ${chipsTotal} Ksh`;
-        document.getElementById('small-juice-summary').textContent = `Small Juice: ${smallJuiceQuantity} x 50 Ksh = ${smallJuiceTotal} Ksh`;
-        document.getElementById('large-juice-summary').textContent = `Large Juice: ${largeJuiceQuantity} x 100 Ksh = ${largeJuiceTotal} Ksh`;
-        document.getElementById('sausage-summary').textContent = `Sausage: ${sausageQuantity} x 50 Ksh = ${sausageTotal} Ksh`;
-        document.getElementById('total-price').textContent = total;
-
-        document.getElementById('order-summary').style.display = 'block';
+        totalElement.textContent = total + " Ksh";
     }
+
+    // Event listeners to update total when selection changes
+    chipsSelect.addEventListener("change", updateTotal);
+    smallJuiceSelect.addEventListener("change", updateTotal);
+    largeJuiceSelect.addEventListener("change", updateTotal);
+    sausageSelect.addEventListener("change", updateTotal);
+    deliverySelect.addEventListener("change", updateTotal);
+
+    // Initialize total
+    updateTotal();
 </script>
 
 </body>
 </html>
-
