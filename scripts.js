@@ -17,6 +17,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 
 // Updated updateCart() function with delivery fee logic
 function updateCart() {
+  console.log('updateCart() called'); // Debug message
   const cartItemsDiv = document.getElementById('cartItems');
   const cartTotalDiv = document.getElementById('cartTotal');
   cartItemsDiv.innerHTML = ''; // Clear current items
