@@ -1,70 +1,55 @@
 let cart = [];
 
-const updateCart = () => {
-    const cartItemsContainer = document.getElementById('cart-items');
-    const totalAmountElement = document.getElementById('total-amount');
-    let total = 0;
+// Handle the "Add to Cart" buttons
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const itemName = e.target.getAttribute('data-name');
+        const itemPrice = parseInt(e.target.getAttribute('data-price'));
+        
+        // Add the item to the cart
+        cart.push({ name: itemName, price: itemPrice, quantity: 1 });
 
-    cartItemsContainer.innerHTML = '';
+        // Update the cart display
+        updateCart();
+    });
+});
 
-    cart.forEach(item => {
-        const cartItemElement = document.createElement('div');
-        cartItemElement.classList.add('cart-item');
-        cartItemElement.innerHTML = `
-            <span>${item.name} x${item.quantity}</span>
-            <span>${item.price * item.quantity} Ksh</span>
+// Update the cart items in the sidebar
+function updateCart() {
+    const cartItemsContainer = document.getElementById('cartItems');
+    const totalAmountElement = document.getElementById('totalAmount');
+    cartItemsContainer.innerHTML = ''; // Clear previous items
+    let totalAmount = 0;
+
+    cart.forEach((item, index) => {
+        totalAmount += item.price * item.quantity;
+        cartItemsContainer.innerHTML += `
+            <div class="cart-item">
+                <span>${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh</span>
+                <button class="increase-qty" data-index="${index}">+</button>
+                <button class="decrease-qty" data-index="${index}">-</button>
+            </div>
         `;
-        cartItemsContainer.appendChild(cartItemElement);
-        total += item.price * item.quantity;
     });
 
-    totalAmountElement.innerText = `Total: ${total} Ksh`;
+    totalAmountElement.textContent = totalAmount;
+}
 
-    const placeOrderButton = document.getElementById('place-order');
-    placeOrderButton.disabled = cart.length === 0;
-    placeOrderButton.innerText = `Place Order (${total} Ksh)`;
-};
-
-const addToCart = (product, price) => {
-    const existingItem = cart.find(item => item.name === product);
-
-    if (existingItem) {
-        existingItem.quantity++;
-    } else {
-        cart.push({ name: product, price, quantity: 1 });
+// Increase item quantity in the cart
+document.getElementById('cartItems').addEventListener('click', (e) => {
+    const index = e.target.getAttribute('data-index');
+    if (e.target.classList.contains('increase-qty')) {
+        cart[index].quantity++;
     }
-
-    updateCart();
-};
-
-const updateItemQuantity = (product, quantity) => {
-    const item = cart.find(item => item.name === product);
-    if (item) {
-        item.quantity = parseInt(quantity);
-        if (item.quantity <= 0) {
-            cart = cart.filter(cartItem => cartItem !== item);
+    if (e.target.classList.contains('decrease-qty')) {
+        if (cart[index].quantity > 1) {
+            cart[index].quantity--;
         }
     }
-
     updateCart();
-};
-
-document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', () => {
-        const product = button.getAttribute('data-product');
-        const price = parseInt(button.getAttribute('data-price'));
-        addToCart(product, price);
-    });
 });
 
-document.querySelectorAll('.order-quantity').forEach(input => {
-    input.addEventListener('change', () => {
-        const product = input.getAttribute('data-product');
-        const quantity = input.value;
-        updateItemQuantity(product, quantity);
-    });
-});
-
-document.getElementById('place-order').addEventListener('click', () => {
-    alert('Order placed! Total: ' + document.getElementById('total-amount').innerText);
+// Handle the "Place Order" button
+document.getElementById('placeOrder').addEventListener('click', () => {
+    alert('Order placed!'); // This is where you'd handle the backend order processing
 });
