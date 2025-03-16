@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Page</title>
+</head>
+<body>
+
+    <h2>Complete Your Order</h2>
+
+    <form action="/submit_order" method="POST">
+        <label for="chips">Chips (100 Ksh):</label>
+        <input type="number" id="chips" name="chips" min="0" value="0"><br>
+
+        <label for="small-juice">Juice (Small - 50 Ksh):</label>
+        <input type="number" id="small-juice" name="small-juice" min="0" value="0"><br>
+
+        <label for="large-juice">Juice (Large - 100 Ksh):</label>
+        <input type="number" id="large-juice" name="large-juice" min="0" value="0"><br>
+
+        <label for="sausage">Sausage (50 Ksh):</label>
+        <input type="number" id="sausage" name="sausage" min="0" value="0"><br>
+
+        <label for="delivery">Delivery Type:</label>
+        <select id="delivery" name="delivery">
+            <option value="0">Pick-Up</option>
+            <option value="50">Home Delivery (50 Ksh)</option>
+        </select><br>
+
+        <button type="submit">Submit Order</button>
+    </form>
+
+</body>
+</html>
