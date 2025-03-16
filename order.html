@@ -5,15 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Order - Ponderosa</title>
   <style>
-    /* Reset & Base Styles */
+    /* Basic Reset & Base Styles */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; font-family: Arial, sans-serif; }
-    
-    /* Container for layout: left = products; right = cart */
-    .container {
-      display: flex;
-      height: 100vh;
-    }
+    html, body { height: 100%; font-family: Arial, sans-serif; background: #f8f8f8; }
     
     /* Header */
     header {
@@ -25,7 +19,14 @@
       font-weight: bold;
     }
     
-    /* Left column: products */
+    /* Container for Products and Cart */
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 80px); /* Deduct header height */
+    }
+    
+    /* Products Column */
     .products-container {
       flex: 1;
       overflow-y: auto;
@@ -70,14 +71,13 @@
       font-size: 16px;
     }
     
-    /* Right column: fixed cart sidebar */
+    /* Cart Sidebar */
     .cart-container {
-      width: 300px;
       background: white;
       border-left: 1px solid #ddd;
       padding: 20px;
       box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-      position: relative;
+      width: 300px;
     }
     
     .cart-header {
@@ -88,7 +88,7 @@
     }
     
     .cart-items {
-      max-height: calc(100vh - 200px);
+      max-height: 300px;
       overflow-y: auto;
       margin-bottom: 20px;
     }
@@ -129,12 +129,42 @@
       font-size: 18px;
       font-weight: bold;
     }
+    
+    /* Desktop (Laptop) Layout */
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
+      .products-container {
+        flex: 1;
+      }
+      .cart-wrapper {
+        width: 300px;
+        flex-shrink: 0;
+      }
+    }
+    
+    /* For Laptop, keep the cart fixed and the products scrollable */
+    @media (min-width: 768px) {
+      .container {
+        position: relative;
+      }
+      .products-container {
+        overflow-y: auto;
+      }
+      .cart-wrapper {
+        position: fixed;
+        top: 80px; /* header height */
+        right: 0;
+        height: calc(100vh - 80px);
+      }
+    }
   </style>
 </head>
 <body>
   <header>Ponderosa - Order Your Favorites</header>
   <div class="container">
-    <!-- Left Column: Products (Vertical List, Scrollable) -->
+    <!-- Left Column: Products -->
     <div class="products-container">
       <div class="product-item">
         <img src="chips.jpg" alt="Chips">
@@ -143,48 +173,49 @@
         <button class="add-to-cart" data-name="Chips" data-price="100">Add to Cart</button>
       </div>
       <div class="product-item">
-        <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice (Small)">
+        <img src="juice_small.jpg" alt="Juice (Small)">
         <h3>Juice (Small)</h3>
         <p>Price: 50 Ksh</p>
         <button class="add-to-cart" data-name="Juice (Small)" data-price="50">Add to Cart</button>
       </div>
       <div class="product-item">
-        <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice (Large)">
+        <img src="juice_large.jpg" alt="Juice (Large)">
         <h3>Juice (Large)</h3>
         <p>Price: 100 Ksh</p>
         <button class="add-to-cart" data-name="Juice (Large)" data-price="100">Add to Cart</button>
       </div>
       <div class="product-item">
-        <img src="Sausage.jpg" alt="Sausage">
+        <img src="sausage.jpg" alt="Sausage">
         <h3>Sausage</h3>
         <p>Price: 50 Ksh</p>
         <button class="add-to-cart" data-name="Sausage" data-price="50">Add to Cart</button>
       </div>
     </div>
     
-    <!-- Right Column: Fixed Cart Sidebar -->
-    <div class="cart-container" id="cartContainer">
-      <div class="cart-header">My Cart</div>
-      <div class="cart-items" id="cartItems">
-        <!-- Cart items will be added dynamically -->
+    <!-- Right Column: Cart (Fixed on Laptop) -->
+    <div class="cart-wrapper">
+      <div class="cart-container" id="cartContainer">
+        <div class="cart-header">My Cart</div>
+        <div class="cart-items" id="cartItems">
+          <!-- Cart items will be dynamically added here -->
+        </div>
+        <div class="cart-total" id="cartTotal">Total: 0 Ksh</div>
+        <button class="place-order-btn" id="placeOrder">Place Order</button>
       </div>
-      <div class="cart-total" id="cartTotal">Total: 0 Ksh</div>
-      <button class="place-order-btn" id="placeOrder">Place Order</button>
     </div>
   </div>
   
   <script>
     let cart = [];
     
-    // Event listener for "Add to Cart" buttons
+    // Handle "Add to Cart" button clicks
     document.querySelectorAll('.add-to-cart').forEach(button => {
       button.addEventListener('click', () => {
         const name = button.getAttribute('data-name');
         const price = parseInt(button.getAttribute('data-price'));
-        // Check if item exists in the cart
-        const existingItem = cart.find(item => item.name === name);
-        if (existingItem) {
-          existingItem.quantity++;
+        const existing = cart.find(item => item.name === name);
+        if (existing) {
+          existing.quantity++;
         } else {
           cart.push({ name: name, price: price, quantity: 1 });
         }
@@ -192,7 +223,7 @@
       });
     });
     
-    // Function to update the cart display
+    // Update the cart display
     function updateCart() {
       const cartItemsDiv = document.getElementById('cartItems');
       const cartTotalDiv = document.getElementById('cartTotal');
@@ -213,7 +244,7 @@
       cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
     }
     
-    // Event listeners for + and - buttons in the cart
+    // Handle quantity adjustments in the cart
     document.getElementById('cartItems').addEventListener('click', (e) => {
       const index = e.target.getAttribute('data-index');
       if (e.target.classList.contains('increase')) {
