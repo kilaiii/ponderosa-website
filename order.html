@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order - Ponderosa</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,100 +11,148 @@
             padding: 0;
             background-color: #f8f8f8;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
 
-        .order-container {
-            width: 80%;
-            max-width: 1000px;
+        header {
+            background-color: #ffcc00;
+            padding: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            width: 70%;
+        }
+
+        .product {
             background: white;
-            padding: 30px;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
         }
 
-        .order-item {
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .my-cart {
+            position: fixed;
+            top: 20%;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            font-size: 18px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+        }
+
+        .my-cart-header {
+            font-weight: bold;
             margin-bottom: 20px;
         }
 
-        .order-item img {
-            width: 50px;
-            height: 50px;
-            border-radius: 5px;
+        .my-cart-items {
+            margin-top: 20px;
+            max-height: 50%;
+            overflow-y: auto;
         }
 
-        .order-item input {
-            width: 50px;
-            padding: 5px;
-            text-align: center;
-            border-radius: 5px;
+        .my-cart-footer {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00;
         }
 
-        .order-item button {
+        .my-cart-btn {
             background-color: #28a745;
             color: white;
             border: none;
             padding: 10px;
+            width: 100%;
+            font-weight: bold;
             cursor: pointer;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .cart-item button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 18px;
             border-radius: 5px;
         }
 
-        .order-summary {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-
-        #total-amount {
+        .cart-item span {
             font-weight: bold;
-            font-size: 20px;
         }
     </style>
 </head>
 <body>
 
-<div class="order-container">
-    <h2>Your Order</h2>
+<header>PONDEROSA - Order Your Favorite Chips & Juices</header>
 
-    <div class="order-item">
+<div class="products">
+    <div class="product">
         <img src="chips.jpg" alt="Chips">
-        <span>Chips</span>
-        <input type="number" value="1" class="order-quantity" data-product="chips" data-price="100">
-        <button class="update-cart">Update</button>
+        <h3>Chips</h3>
+        <p>Price: 100 Ksh</p>
+        <button class="add-to-cart" data-name="Chips" data-price="100">Add to Cart</button>
     </div>
-
-    <div class="order-item">
-        <img src="small-juice.jpg" alt="Small Juice">
-        <span>Juice (Small)</span>
-        <input type="number" value="1" class="order-quantity" data-product="small-juice" data-price="50">
-        <button class="update-cart">Update</button>
+    <div class="product">
+        <img src="juice_small.jpg" alt="Juice Small">
+        <h3>Juice (Small)</h3>
+        <p>Price: 50 Ksh</p>
+        <button class="add-to-cart" data-name="Juice (Small)" data-price="50">Add to Cart</button>
     </div>
-
-    <div class="order-item">
-        <img src="large-juice.jpg" alt="Large Juice">
-        <span>Juice (Large)</span>
-        <input type="number" value="1" class="order-quantity" data-product="large-juice" data-price="100">
-        <button class="update-cart">Update</button>
+    <div class="product">
+        <img src="juice_large.jpg" alt="Juice Large">
+        <h3>Juice (Large)</h3>
+        <p>Price: 100 Ksh</p>
+        <button class="add-to-cart" data-name="Juice (Large)" data-price="100">Add to Cart</button>
     </div>
-
-    <div class="order-item">
+    <div class="product">
         <img src="sausage.jpg" alt="Sausage">
-        <span>Sausage</span>
-        <input type="number" value="1" class="order-quantity" data-product="sausage" data-price="50">
-        <button class="update-cart">Update</button>
-    </div>
-
-    <div class="order-summary">
-        <div id="total-amount">Total: 0 Ksh</div>
-        <button id="place-order">Place Order</button>
+        <h3>Sausage</h3>
+        <p>Price: 50 Ksh</p>
+        <button class="add-to-cart" data-name="Sausage" data-price="50">Add to Cart</button>
     </div>
 </div>
 
-<script src="scripts.js"></script>
+<!-- My Cart Sidebar -->
+<div class="my-cart" id="myCart">
+    <div class="my-cart-header">
+        My Cart
+    </div>
+    <div class="my-cart-items" id="cartItems">
+        <!-- Cart items will be added here dynamically -->
+    </div>
+    <div class="my-cart-footer">
+        Total: <span id="totalAmount">0</span> Ksh
+    </div>
+    <button id="placeOrder" class="my-cart-btn">Place Order</button>
+</div>
 
+<script src="scripts.js"></script>
 </body>
 </html>
