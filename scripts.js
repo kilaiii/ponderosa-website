@@ -15,15 +15,15 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
   });
 });
 
-// Update the cart display
+// Updated updateCart() function with delivery fee logic
 function updateCart() {
   const cartItemsDiv = document.getElementById('cartItems');
   const cartTotalDiv = document.getElementById('cartTotal');
   cartItemsDiv.innerHTML = ''; // Clear current items
-  let total = 0;
+  
+  let subtotal = 0;
   cart.forEach((item, index) => {
-    total += item.price * item.quantity;
-    // Wrap product name in <strong> to make it bold
+    subtotal += item.price * item.quantity;
     cartItemsDiv.innerHTML += `
       <div class="cart-item">
         <span><strong>${item.name}</strong> (x${item.quantity}) - ${item.price * item.quantity} Ksh</span>
@@ -34,6 +34,18 @@ function updateCart() {
       </div>
     `;
   });
+  
+  // Add delivery fee if there is any item in the cart
+  let deliveryFee = (cart.length > 0) ? 50 : 0;
+  if (cart.length > 0) {
+    cartItemsDiv.innerHTML += `
+      <div class="cart-item">
+        <span><strong>Delivery Fee</strong> - 50 Ksh</span>
+      </div>
+    `;
+  }
+  
+  let total = subtotal + deliveryFee;
   cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
 }
 
