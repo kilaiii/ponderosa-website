@@ -100,6 +100,22 @@
         .delivery-type label {
             font-weight: bold;
         }
+        .place-order-btn {
+  background-color: #28a745; /* Base green color */
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.place-order-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05); /* Slight enlargement on hover */
+}
+
     </style>
 </head>
 <body>
@@ -131,7 +147,8 @@
 
 <!-- Place Your Order Section -->
 <a href="order.html">
-    <button class="order-btn">Place an Order</button>
+    <button class="place-order-btn" onclick="location.href='order.html'">Place Order</button>
+
 </a>
     
 <div class="contact">
