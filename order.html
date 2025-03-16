@@ -5,98 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ponderosa - Place Your Order</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Basic Page Styling */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f8f8;
-    text-align: center;
-}
-
-/* Header Styling */
-header {
-    background-color: #ffcc00;
-    padding: 20px;
-    font-size: 30px;
-    font-weight: bold;
-}
-
-/* Product Item Styling */
-.products {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin: 20px;
-}
-
-.product-item {
-    background: white;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 250px;
-}
-
-.product-item img {
-    width: 100%;
-    border-radius: 10px;
-}
-
-/* Cart Styling */
-.cart {
-    background-color: #333;
-    color: white;
-    padding: 20px;
-    margin-top: 30px;
-    border-radius: 10px;
-}
-
-.cart ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.cart ul li {
-    margin-bottom: 10px;
-}
-
-/* Add to Cart Button Styling */
-.add-to-cart {
-    background-color: #28a745;
-    color: white;
-    font-size: 16px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.add-to-cart:hover {
-    background-color: #218838;
-}
-
-/* Submit Order Button Styling */
-#submit-order {
-    background-color: #007bff;
-    color: white;
-    font-size: 18px;
-    padding: 15px 30px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-}
-
-#submit-order:hover {
-    background-color: #0056b3;
-}
-
-    </style>
 </head>
 <body>
+
     <header>
         <h1>Place Your Order</h1>
     </header>
@@ -113,7 +24,7 @@ header {
 
         <!-- Juice Small -->
         <div class="product-item" data-id="juice-small">
-            <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice Small">
+            <img src="juice-small.jpg" alt="Juice Small">
             <h3>Juice (Small)</h3>
             <p>Price: 50 Ksh</p>
             <input type="number" id="juice-small-quantity" value="0" min="0">
@@ -122,7 +33,7 @@ header {
 
         <!-- Juice Large -->
         <div class="product-item" data-id="juice-large">
-            <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice Large">
+            <img src="juice-large.jpg" alt="Juice Large">
             <h3>Juice (Large)</h3>
             <p>Price: 100 Ksh</p>
             <input type="number" id="juice-large-quantity" value="0" min="0">
@@ -131,7 +42,7 @@ header {
 
         <!-- Sausage -->
         <div class="product-item" data-id="sausage">
-            <img src="Sausage.jpg" alt="Sausage">
+            <img src="sausage.jpg" alt="Sausage">
             <h3>Sausage</h3>
             <p>Price: 50 Ksh</p>
             <input type="number" id="sausage-quantity" value="0" min="0">
@@ -139,13 +50,13 @@ header {
         </div>
     </section>
 
-    <!-- Cart and Total -->
-    <section class="cart">
-        <h2>Your Cart</h2>
+    <!-- Cart Tab -->
+    <div id="myCart" class="cart-tab">
+        <h2>My Cart</h2>
         <ul id="cart-items"></ul>
         <p>Total: <span id="total-price">0 Ksh</span></p>
-        <button id="submit-order">Submit Order</button>
-    </section>
+        <button id="place-order">Place Order (0 Ksh)</button>
+    </div>
 
     <script src="scripts.js"></script>
 </body>
