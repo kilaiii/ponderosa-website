@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Order - Ponderosa</title>
   <style>
-    /* Basic Reset & Base Styles */
+    /* Reset & Base Styles */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; font-family: Arial, sans-serif; background: #f8f8f8; }
+    html, body { height: 100%; font-family: Arial, sans-serif; background-color: #f8f8f8; }
     
     /* Header */
     header {
@@ -19,21 +19,25 @@
       font-weight: bold;
     }
     
-    /* Container for Products and Cart */
+    /* Main Container: Two Columns Layout on Desktop; Column Layout on Mobile */
     .container {
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 80px); /* Deduct header height */
+      min-height: calc(100vh - 80px); /* subtract header height */
+    }
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
     }
     
-    /* Products Column */
+    /* Left Column: Products */
     .products-container {
       flex: 1;
       overflow-y: auto;
       padding: 20px;
-      background: #f8f8f8;
+      background-color: #f8f8f8;
     }
-    
     .product-item {
       background: white;
       margin-bottom: 20px;
@@ -41,7 +45,6 @@
       border-radius: 8px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-    
     .product-item img {
       width: 100%;
       height: 150px;
@@ -49,17 +52,14 @@
       border-radius: 5px;
       margin-bottom: 10px;
     }
-    
     .product-item h3 {
       font-size: 20px;
       margin-bottom: 5px;
     }
-    
     .product-item p {
       font-size: 16px;
       margin-bottom: 10px;
     }
-    
     .add-to-cart {
       background-color: #28a745;
       color: white;
@@ -71,13 +71,33 @@
       font-size: 16px;
     }
     
-    /* Cart Sidebar */
-    .cart-container {
+    /* Right Column: Cart Sidebar */
+    .cart-wrapper {
+      width: 300px;
+      flex-shrink: 0;
       background: white;
       border-left: 1px solid #ddd;
       padding: 20px;
       box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-      width: 300px;
+    }
+    /* Desktop: Fixed Cart Sidebar */
+    @media (min-width: 768px) {
+      .cart-wrapper {
+        position: fixed;
+        right: 0;
+        top: 80px; /* header height */
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+      }
+    }
+    /* Mobile: Cart takes full width below products */
+    @media (max-width: 767px) {
+      .cart-wrapper {
+        position: relative;
+        width: 100%;
+        border-left: none;
+        box-shadow: none;
+      }
     }
     
     .cart-header {
@@ -86,13 +106,11 @@
       margin-bottom: 20px;
       text-align: center;
     }
-    
     .cart-items {
       max-height: 300px;
       overflow-y: auto;
       margin-bottom: 20px;
     }
-    
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -100,7 +118,6 @@
       margin-bottom: 15px;
       font-size: 16px;
     }
-    
     .cart-item button {
       background-color: #ffcc00;
       border: none;
@@ -110,14 +127,12 @@
       border-radius: 3px;
       margin-left: 5px;
     }
-    
     .cart-total {
       font-size: 20px;
       font-weight: bold;
       text-align: center;
       margin-bottom: 10px;
     }
-    
     .place-order-btn {
       background-color: #28a745;
       color: white;
@@ -128,36 +143,6 @@
       cursor: pointer;
       font-size: 18px;
       font-weight: bold;
-    }
-    
-    /* Desktop (Laptop) Layout */
-    @media (min-width: 768px) {
-      .container {
-        flex-direction: row;
-      }
-      .products-container {
-        flex: 1;
-      }
-      .cart-wrapper {
-        width: 300px;
-        flex-shrink: 0;
-      }
-    }
-    
-    /* For Laptop, keep the cart fixed and the products scrollable */
-    @media (min-width: 768px) {
-      .container {
-        position: relative;
-      }
-      .products-container {
-        overflow-y: auto;
-      }
-      .cart-wrapper {
-        position: fixed;
-        top: 80px; /* header height */
-        right: 0;
-        height: calc(100vh - 80px);
-      }
     }
   </style>
 </head>
@@ -185,30 +170,28 @@
         <button class="add-to-cart" data-name="Juice (Large)" data-price="100">Add to Cart</button>
       </div>
       <div class="product-item">
-        <img src="sausage.jpg" alt="Sausage">
+        <img src="Sausage.jpg" alt="Sausage">
         <h3>Sausage</h3>
         <p>Price: 50 Ksh</p>
         <button class="add-to-cart" data-name="Sausage" data-price="50">Add to Cart</button>
       </div>
     </div>
     
-    <!-- Right Column: Cart (Fixed on Laptop) -->
-    <div class="cart-wrapper">
-      <div class="cart-container" id="cartContainer">
-        <div class="cart-header">My Cart</div>
-        <div class="cart-items" id="cartItems">
-          <!-- Cart items will be dynamically added here -->
-        </div>
-        <div class="cart-total" id="cartTotal">Total: 0 Ksh</div>
-        <button class="place-order-btn" id="placeOrder">Place Order</button>
+    <!-- Right Column: Cart Sidebar -->
+    <div class="cart-wrapper" id="cartWrapper">
+      <div class="cart-header">My Cart</div>
+      <div class="cart-items" id="cartItems">
+        <!-- Cart items will be dynamically added here -->
       </div>
+      <div class="cart-total" id="cartTotal">Total: 0 Ksh</div>
+      <button class="place-order-btn" id="placeOrder">Place Order</button>
     </div>
   </div>
   
   <script>
     let cart = [];
     
-    // Handle "Add to Cart" button clicks
+    // Add to Cart event listener
     document.querySelectorAll('.add-to-cart').forEach(button => {
       button.addEventListener('click', () => {
         const name = button.getAttribute('data-name');
@@ -223,7 +206,6 @@
       });
     });
     
-    // Update the cart display
     function updateCart() {
       const cartItemsDiv = document.getElementById('cartItems');
       const cartTotalDiv = document.getElementById('cartTotal');
@@ -231,12 +213,13 @@
       let total = 0;
       cart.forEach((item, index) => {
         total += item.price * item.quantity;
+        // Buttons are ordered as "-" then "+"
         cartItemsDiv.innerHTML += `
           <div class="cart-item">
             <span>${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh</span>
             <div>
-              <button class="increase" data-index="${index}">+</button>
               <button class="decrease" data-index="${index}">-</button>
+              <button class="increase" data-index="${index}">+</button>
             </div>
           </div>
         `;
@@ -244,12 +227,8 @@
       cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
     }
     
-    // Handle quantity adjustments in the cart
     document.getElementById('cartItems').addEventListener('click', (e) => {
       const index = e.target.getAttribute('data-index');
-      if (e.target.classList.contains('increase')) {
-        cart[index].quantity++;
-      }
       if (e.target.classList.contains('decrease')) {
         if (cart[index].quantity > 1) {
           cart[index].quantity--;
@@ -257,10 +236,12 @@
           cart.splice(index, 1);
         }
       }
+      if (e.target.classList.contains('increase')) {
+        cart[index].quantity++;
+      }
       updateCart();
     });
     
-    // Place Order button handler
     document.getElementById('placeOrder').addEventListener('click', () => {
       alert('Order placed! Total: ' + document.getElementById('cartTotal').textContent);
     });
