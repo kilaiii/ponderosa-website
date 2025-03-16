@@ -1,84 +1,70 @@
-// Product prices
-const prices = {
-    chips: 100,
-    "juice-small": 50,
-    "juice-large": 100,
-    sausage: 50,
+let cart = [];
+
+const updateCart = () => {
+    const cartItemsContainer = document.getElementById('cart-items');
+    const totalAmountElement = document.getElementById('total-amount');
+    let total = 0;
+
+    cartItemsContainer.innerHTML = '';
+
+    cart.forEach(item => {
+        const cartItemElement = document.createElement('div');
+        cartItemElement.classList.add('cart-item');
+        cartItemElement.innerHTML = `
+            <span>${item.name} x${item.quantity}</span>
+            <span>${item.price * item.quantity} Ksh</span>
+        `;
+        cartItemsContainer.appendChild(cartItemElement);
+        total += item.price * item.quantity;
+    });
+
+    totalAmountElement.innerText = `Total: ${total} Ksh`;
+
+    const placeOrderButton = document.getElementById('place-order');
+    placeOrderButton.disabled = cart.length === 0;
+    placeOrderButton.innerText = `Place Order (${total} Ksh)`;
 };
 
-// Cart to store the quantities and products
-let cart = {};
+const addToCart = (product, price) => {
+    const existingItem = cart.find(item => item.name === product);
 
-// Function to update the cart display
-function updateCart() {
-    let cartItems = document.getElementById("cart-items");
-    cartItems.innerHTML = ''; // Clear existing cart items
-    let totalPrice = 0;
-
-    // Loop through cart to create cart item elements
-    for (let product in cart) {
-        const quantity = cart[product];
-        const productPrice = prices[product];
-        const productTotal = productPrice * quantity;
-
-        let cartItem = document.createElement("li");
-        cartItem.innerHTML = `${product.charAt(0).toUpperCase() + product.slice(1)} 
-            <button class="adjust-quantity" data-product="${product}" data-action="decrease">-</button>
-            <span>${quantity}</span>
-            <button class="adjust-quantity" data-product="${product}" data-action="increase">+</button>
-            = ${productTotal} Ksh`;
-
-        cartItems.appendChild(cartItem);
-
-        totalPrice += productTotal;
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({ name: product, price, quantity: 1 });
     }
 
-    // Update the total price
-    document.getElementById("total-price").textContent = `${totalPrice} Ksh`;
+    updateCart();
+};
 
-    // Update "Place Order" button text
-    document.getElementById("place-order").textContent = `Place Order (${totalPrice} Ksh)`;
-}
-
-// Function to handle adding items to the cart
-function addToCart(product) {
-    let quantity = document.getElementById(`${product}-quantity`).value;
-    quantity = parseInt(quantity);
-
-    if (quantity > 0) {
-        cart[product] = quantity;
-        updateCart();
+const updateItemQuantity = (product, quantity) => {
+    const item = cart.find(item => item.name === product);
+    if (item) {
+        item.quantity = parseInt(quantity);
+        if (item.quantity <= 0) {
+            cart = cart.filter(cartItem => cartItem !== item);
+        }
     }
-}
 
-// Event listeners for "Add to Cart" buttons
-const addToCartButtons = document.querySelectorAll(".add-to-cart");
-addToCartButtons.forEach(button => {
-    button.addEventListener("click", function() {
-        const product = button.getAttribute("data-product");
-        addToCart(product);
+    updateCart();
+};
+
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+        const product = button.getAttribute('data-product');
+        const price = parseInt(button.getAttribute('data-price'));
+        addToCart(product, price);
     });
 });
 
-// Event listeners for adjusting item quantities (+ and -)
-document.addEventListener("click", function(e) {
-    if (e.target.classList.contains("adjust-quantity")) {
-        const product = e.target.getAttribute("data-product");
-        const action = e.target.getAttribute("data-action");
-
-        if (cart[product]) {
-            if (action === "increase") {
-                cart[product]++;
-            } else if (action === "decrease" && cart[product] > 0) {
-                cart[product]--;
-            }
-            updateCart();
-        }
-    }
+document.querySelectorAll('.order-quantity').forEach(input => {
+    input.addEventListener('change', () => {
+        const product = input.getAttribute('data-product');
+        const quantity = input.value;
+        updateItemQuantity(product, quantity);
+    });
 });
 
-// Function to handle order submission (just a log for now)
-document.getElementById("place-order").addEventListener("click", function() {
-    console.log("Order Submitted", cart);
-    alert("Order Submitted! We will contact you soon.");
+document.getElementById('place-order').addEventListener('click', () => {
+    alert('Order placed! Total: ' + document.getElementById('total-amount').innerText);
 });
