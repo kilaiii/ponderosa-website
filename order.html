@@ -3,33 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Page</title>
+    <title>Ponderosa - Place Your Order</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <h1>Place Your Order</h1>
+    </header>
 
-    <h2>Complete Your Order</h2>
+    <section class="products">
+        <!-- Chips -->
+        <div class="product-item" data-id="chips">
+            <img src="chips.jpg" alt="Chips">
+            <h3>Chips</h3>
+            <p>Price: 100 Ksh</p>
+            <input type="number" id="chips-quantity" value="0" min="0">
+            <button class="add-to-cart" data-product="chips">Add to Cart</button>
+        </div>
 
-    <form action="/submit_order" method="POST">
-        <label for="chips">Chips (100 Ksh):</label>
-        <input type="number" id="chips" name="chips" min="0" value="0"><br>
+        <!-- Juice Small -->
+        <div class="product-item" data-id="juice-small">
+            <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice Small">
+            <h3>Juice (Small)</h3>
+            <p>Price: 50 Ksh</p>
+            <input type="number" id="juice-small-quantity" value="0" min="0">
+            <button class="add-to-cart" data-product="juice-small">Add to Cart</button>
+        </div>
 
-        <label for="small-juice">Juice (Small - 50 Ksh):</label>
-        <input type="number" id="small-juice" name="small-juice" min="0" value="0"><br>
+        <!-- Juice Large -->
+        <div class="product-item" data-id="juice-large">
+            <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice Large">
+            <h3>Juice (Large)</h3>
+            <p>Price: 100 Ksh</p>
+            <input type="number" id="juice-large-quantity" value="0" min="0">
+            <button class="add-to-cart" data-product="juice-large">Add to Cart</button>
+        </div>
 
-        <label for="large-juice">Juice (Large - 100 Ksh):</label>
-        <input type="number" id="large-juice" name="large-juice" min="0" value="0"><br>
+        <!-- Sausage -->
+        <div class="product-item" data-id="sausage">
+            <img src="Sausage.jpg" alt="Sausage">
+            <h3>Sausage</h3>
+            <p>Price: 50 Ksh</p>
+            <input type="number" id="sausage-quantity" value="0" min="0">
+            <button class="add-to-cart" data-product="sausage">Add to Cart</button>
+        </div>
+    </section>
 
-        <label for="sausage">Sausage (50 Ksh):</label>
-        <input type="number" id="sausage" name="sausage" min="0" value="0"><br>
+    <!-- Cart and Total -->
+    <section class="cart">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: <span id="total-price">0 Ksh</span></p>
+        <button id="submit-order">Submit Order</button>
+    </section>
 
-        <label for="delivery">Delivery Type:</label>
-        <select id="delivery" name="delivery">
-            <option value="0">Pick-Up</option>
-            <option value="50">Home Delivery (50 Ksh)</option>
-        </select><br>
-
-        <button type="submit">Submit Order</button>
-    </form>
-
+    <script src="scripts.js"></script>
 </body>
 </html>
