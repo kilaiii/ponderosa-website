@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Order - Ponderosa</title>
   <style>
-    /* Reset & Base Styles */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; font-family: Arial, sans-serif; background-color: #f8f8f8; }
-    
-    /* Header */
     header {
       background: linear-gradient(45deg, #ffcc00, #ffaa00);
       color: #333;
@@ -17,21 +14,23 @@
       text-align: center;
       font-size: 28px;
       font-weight: bold;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1000;
     }
-    
-    /* Main Container: Two Columns Layout on Desktop; Column Layout on Mobile */
     .container {
       display: flex;
       flex-direction: column;
       min-height: calc(100vh - 80px);
+      margin-top: 80px;
     }
     @media (min-width: 768px) {
       .container {
         flex-direction: row;
       }
     }
-    
-    /* Left Column: Products */
     .products-container {
       flex: 1;
       overflow-y: auto;
@@ -52,14 +51,6 @@
       border-radius: 5px;
       margin-bottom: 10px;
     }
-    .product-item h3 {
-      font-size: 20px;
-      margin-bottom: 5px;
-    }
-    .product-item p {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
     .add-to-cart {
       background-color: #28a745;
       color: white;
@@ -70,8 +61,6 @@
       cursor: pointer;
       font-size: 16px;
     }
-    
-    /* Right Column: Cart Sidebar */
     .cart-wrapper {
       width: 300px;
       flex-shrink: 0;
@@ -89,15 +78,6 @@
         overflow-y: auto;
       }
     }
-    @media (max-width: 767px) {
-      .cart-wrapper {
-        position: relative;
-        width: 100%;
-        border-left: none;
-        box-shadow: none;
-      }
-    }
-    
     .cart-header {
       font-size: 24px;
       font-weight: bold;
@@ -116,14 +96,14 @@
       margin-bottom: 15px;
       font-size: 16px;
     }
-    .cart-item button {
-      background-color: #ffcc00;
+    .remove-item {
+      background-color: #ff4444;
+      color: white;
       border: none;
       padding: 5px 10px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       border-radius: 3px;
-      margin-left: 5px;
     }
     .cart-total {
       font-size: 20px;
@@ -145,7 +125,7 @@
   </style>
 </head>
 <body>
-  <header>Ponderosa - Order Your Favorites</header>
+  <header>Ponderosa Order Your Favourites</header>
   <div class="container">
     <div class="products-container">
       <div class="product-item">
@@ -155,13 +135,24 @@
         <button class="add-to-cart" data-name="Chips" data-price="100">Add to Cart</button>
       </div>
       <div class="product-item">
-        <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice (Small)">
+        <img src="juice-small.jpg" alt="Juice (Small)">
         <h3>Juice (Small)</h3>
         <p>Price: 50 Ksh</p>
         <button class="add-to-cart" data-name="Juice (Small)" data-price="50">Add to Cart</button>
       </div>
+      <div class="product-item">
+        <img src="juice-large.jpg" alt="Juice (Large)">
+        <h3>Juice (Large)</h3>
+        <p>Price: 100 Ksh</p>
+        <button class="add-to-cart" data-name="Juice (Large)" data-price="100">Add to Cart</button>
+      </div>
+      <div class="product-item">
+        <img src="sausage.jpg" alt="Sausage">
+        <h3>Sausage</h3>
+        <p>Price: 50 Ksh</p>
+        <button class="add-to-cart" data-name="Sausage" data-price="50">Add to Cart</button>
+      </div>
     </div>
-    
     <div class="cart-wrapper" id="cartWrapper">
       <div class="cart-header">My Cart</div>
       <div class="cart-items" id="cartItems"></div>
@@ -169,33 +160,36 @@
       <button class="place-order-btn" id="placeOrder">Place Order</button>
     </div>
   </div>
-  
   <script>
     let cart = [];
-    function updateCart() {
-      let cartItems = document.getElementById('cartItems');
-      let cartTotal = document.getElementById('cartTotal');
-      cartItems.innerHTML = '';
-      let total = 0;
-      cart.forEach((item, index) => {
-        total += item.price * item.quantity;
-        cartItems.innerHTML += `<div class='cart-item'>${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh</div>`;
-      });
-      cartTotal.textContent = `Total: ${total} Ksh`;
-    }
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-      button.addEventListener('click', () => {
-        let name = button.dataset.name;
-        let price = parseInt(button.dataset.price);
-        let existing = cart.find(item => item.name === name);
-        if (existing) {
-          existing.quantity++;
-        } else {
-          cart.push({ name, price, quantity: 1 });
-        }
+    document.querySelectorAll(".add-to-cart").forEach(button => {
+      button.addEventListener("click", () => {
+        const name = button.getAttribute("data-name");
+        const price = parseInt(button.getAttribute("data-price"));
+        cart.push({ name, price });
         updateCart();
       });
     });
+    function updateCart() {
+      const cartItems = document.getElementById("cartItems");
+      cartItems.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement("div");
+        div.classList.add("cart-item");
+        div.innerHTML = `${item.name} - ${item.price} Ksh <button class='remove-item' data-index='${index}'>Remove</button>`;
+        cartItems.appendChild(div);
+      });
+      document.getElementById("cartTotal").textContent = `Total: ${total} Ksh`;
+      document.querySelectorAll(".remove-item").forEach(button => {
+        button.addEventListener("click", () => {
+          const index = button.getAttribute("data-index");
+          cart.splice(index, 1);
+          updateCart();
+        });
+      });
+    }
   </script>
 </body>
 </html>
