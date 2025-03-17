@@ -158,6 +158,18 @@
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-total" id="cartTotal">Total: 0 Ksh</div>
       <button class="place-order-btn" id="placeOrder">Place Order</button>
+
+<script>
+    document.getElementById("placeOrder").addEventListener("click", function() {
+        let phoneNumber = "254745798700";  // Your WhatsApp number
+        let message = "Hello, I want to place an order."; // Default message
+        let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        
+        // Redirect to WhatsApp
+        window.location.href = whatsappURL;
+    });
+</script>
+
     </div>
   </div>
   <script>
