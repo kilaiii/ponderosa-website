@@ -264,6 +264,33 @@
             });
         });
     }
+  // Whatsapp Message
+ 
+     document.getElementById("placeOrder").addEventListener("click", function() {
+         if (cart.length === 0) {
+             alert("Your cart is empty!");
+             return;
+         }
+ 
+         let message = "Hello, I want to order:\n";
+         let subtotal = 0;
+ 
+         cart.forEach(item => {
+             message += `${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh\n`;
+             subtotal += item.price * item.quantity;
+         });
+ 
+         let deliveryFee = cart.length > 0 ? 50 : 0;
+         let total = subtotal + deliveryFee;
+ 
+         message += `Delivery Fee: ${deliveryFee} Ksh\nTotal: ${total} Ksh`;
+ 
+         let phoneNumber = "254745798700";
+         let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+ 
+         // Redirect to WhatsApp
+         window.location.href = whatsappURL;
+     });
 </script>
 
 
