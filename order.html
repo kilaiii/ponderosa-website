@@ -189,62 +189,36 @@
   </div>
   
   <script>
-    let cart = [];
-    
-    // Add to Cart event listener
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-      button.addEventListener('click', () => {
-        const name = button.getAttribute('data-name');
-        const price = parseInt(button.getAttribute('data-price'));
-        const existing = cart.find(item => item.name === name);
-        if (existing) {
-          existing.quantity++;
-        } else {
-          cart.push({ name: name, price: price, quantity: 1 });
-        }
-        updateCart();
-      });
-    });
-    
-    function updateCart() {
-      const cartItemsDiv = document.getElementById('cartItems');
-      const cartTotalDiv = document.getElementById('cartTotal');
-      cartItemsDiv.innerHTML = '';
-      let total = 0;
-      cart.forEach((item, index) => {
-        total += item.price * item.quantity;
-        // Buttons are ordered as "-" then "+"
-        cartItemsDiv.innerHTML += `
-          <div class="cart-item">
-            <span>${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh</span>
-            <div>
-              <button class="decrease" data-index="${index}">-</button>
-              <button class="increase" data-index="${index}">+</button>
-            </div>
-          </div>
-        `;
-      });
-      cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
+<script>
+  // Your JavaScript code here.
+  document.getElementById('placeOrder').addEventListener('click', () => {
+    if (cart.length === 0) {
+      alert('Your cart is empty!');
+      return;
     }
-    
-    document.getElementById('cartItems').addEventListener('click', (e) => {
-      const index = e.target.getAttribute('data-index');
-      if (e.target.classList.contains('decrease')) {
-        if (cart[index].quantity > 1) {
-          cart[index].quantity--;
-        } else {
-          cart.splice(index, 1);
-        }
-      }
-      if (e.target.classList.contains('increase')) {
-        cart[index].quantity++;
-      }
+
+    let message = 'Hello, I want to order:\n';
+    let total = 0;
+    cart.forEach(item => {
+      let itemTotal = item.price * item.quantity;
+      message += `${item.name} (x${item.quantity}) - ${itemTotal} Ksh\n`;
+      total += itemTotal;
+    });
+    message += `\nTotal: ${total} Ksh`;
+
+    let phoneNumber = '254712345678';  // Replace with your number.
+    let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappURL, '_blank');
+
+    setTimeout(() => {
+      cart = [];
       updateCart();
-    });
-    
-    document.getElementById('placeOrder').addEventListener('click', () => {
-      alert('Order placed! Total: ' + document.getElementById('cartTotal').textContent);
-    });
+      location.reload();
+    }, 2000);
+  });
+</script>
+
   </script>
 </body>
 </html>
