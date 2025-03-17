@@ -54,24 +54,31 @@ function updateCart() {
 
   let total = subtotal + deliveryFee;
   cartTotalDiv.textContent = `Total: ${total} Ksh`;
+
+  // Reattach event listeners for the buttons
+  document.querySelectorAll('.decrease').forEach(button => {
+    button.addEventListener('click', function () {
+      const index = this.getAttribute('data-index');
+      if (cart[index].quantity > 1) {
+        cart[index].quantity--;
+      } else {
+        cart.splice(index, 1); // Remove item if quantity is 1
+      }
+      saveCart();
+      updateCart();
+    });
+  });
+
+  document.querySelectorAll('.increase').forEach(button => {
+    button.addEventListener('click', function () {
+      const index = this.getAttribute('data-index');
+      cart[index].quantity++;
+      saveCart();
+      updateCart();
+    });
+  });
 }
 
-// Event listener for quantity adjustments
-document.getElementById('cartItems').addEventListener('click', (e) => {
-  const index = e.target.getAttribute('data-index');
-  if (e.target.classList.contains('decrease')) {
-    if (cart[index].quantity > 1) {
-      cart[index].quantity--;
-    } else {
-      cart.splice(index, 1);
-    }
-  }
-  if (e.target.classList.contains('increase')) {
-    cart[index].quantity++;
-  }
-  saveCart();
-  updateCart();
-});
 
 // "Place Order" button handler
 document.getElementById("placeOrder").addEventListener("click", function() {
