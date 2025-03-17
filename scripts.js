@@ -36,25 +36,20 @@ function updateCart() {
     `;
   });
   
-  // If there are items in the cart, show the delivery fee input
+  // Automatically add delivery fee if the cart is not empty
+  let deliveryFee = (cart.length > 0) ? 50 : 0;
   if (cart.length > 0) {
-    // If the input already exists, get its current value; otherwise, default to currentDeliveryFee
-    const existingInput = document.getElementById('deliveryFeeInput');
-    if (existingInput) {
-      currentDeliveryFee = parseInt(existingInput.value) || currentDeliveryFee;
-    }
     cartItemsDiv.innerHTML += `
       <div class="cart-item">
-        <span><strong>Delivery Fee</strong>:</span>
-        <input type="number" id="deliveryFeeInput" value="${currentDeliveryFee}" min="0" style="width:60px; margin-left:10px;">
-        <span> Ksh</span>
+        <span><strong>Delivery Fee</strong> - 50 Ksh</span>
       </div>
     `;
   }
   
-  let total = subtotal + (cart.length > 0 ? currentDeliveryFee : 0);
+  let total = subtotal + deliveryFee;
   cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
 }
+
 
 // Event listener for quantity adjustments (for "-" and "+" buttons)
 document.getElementById('cartItems').addEventListener('click', (e) => {
