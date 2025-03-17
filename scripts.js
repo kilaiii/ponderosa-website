@@ -1,4 +1,5 @@
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+updateCart();
 
 // Event listener for "Add to Cart" buttons
 document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -11,16 +12,22 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
     } else {
       cart.push({ name: name, price: price, quantity: 1 });
     }
+    saveCart();
     updateCart();
   });
 });
 
-// updateCart() function that auto-adds a 50 Ksh delivery fee if cart is not empty
+// Save cart to localStorage
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// updateCart() function with 50 Ksh delivery fee if cart is not empty
 function updateCart() {
   const cartItemsDiv = document.getElementById('cartItems');
   const cartTotalDiv = document.getElementById('cartTotal');
   cartItemsDiv.innerHTML = ''; // Clear current cart items
-  
+
   let subtotal = 0;
   cart.forEach((item, index) => {
     subtotal += item.price * item.quantity;
@@ -34,9 +41,9 @@ function updateCart() {
       </div>
     `;
   });
-  
-  // Automatically add delivery fee if there's at least one item
-  let deliveryFee = (cart.length > 0) ? 50 : 0;
+
+  // Add delivery fee
+  let deliveryFee = cart.length > 0 ? 50 : 0;
   if (cart.length > 0) {
     cartItemsDiv.innerHTML += `
       <div class="cart-item">
@@ -44,12 +51,12 @@ function updateCart() {
       </div>
     `;
   }
-  
+
   let total = subtotal + deliveryFee;
-  cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
+  cartTotalDiv.textContent = `Total: ${total} Ksh`;
 }
 
-// Event listener for quantity adjustments (for "-" and "+" buttons)
+// Event listener for quantity adjustments
 document.getElementById('cartItems').addEventListener('click', (e) => {
   const index = e.target.getAttribute('data-index');
   if (e.target.classList.contains('decrease')) {
@@ -62,40 +69,38 @@ document.getElementById('cartItems').addEventListener('click', (e) => {
   if (e.target.classList.contains('increase')) {
     cart[index].quantity++;
   }
+  saveCart();
   updateCart();
 });
 
 // "Place Order" button handler
-document.getElementById("placeOrderBtn").addEventListener("click", function() {
-    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    if (cartItems.length === 0) {
+document.getElementById("placeOrder").addEventListener("click", function() {
+    if (cart.length === 0) {
         alert("Your cart is empty!");
         return;
     }
 
     let message = "Hello, I want to order:\n";
-    cartItems.forEach(item => {
+    cart.forEach(item => {
         message += `${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh\n`;
     });
-    message += `Total: ${calculateTotal()} Ksh`;
 
-    let phoneNumber = "254745798700";  // Your WhatsApp number
+    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 50;
+    message += `Delivery Fee: 50 Ksh\nTotal: ${total} Ksh`;
+
+    let phoneNumber = "254745798700";
     let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
     // Redirect to WhatsApp
     window.location.href = whatsappURL;
 
     // Clear the cart
-    localStorage.removeItem("cart");
+    cart = [];
+    saveCart();
+    updateCart();
 
-    // Refresh page after 2 seconds (giving time for redirect)
+    // Refresh page after 2 seconds
     setTimeout(() => {
         location.reload();
     }, 2000);
 });
-
-function calculateTotal() {
-    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-}
-
