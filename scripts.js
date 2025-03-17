@@ -66,15 +66,36 @@ document.getElementById('cartItems').addEventListener('click', (e) => {
 });
 
 // "Place Order" button handler
-document.getElementById('placeOrder').addEventListener('click', () => {
-  let message = 'I would like to place an order:\n';
-  cart.forEach(item => {
-    message += `${item.name} x${item.quantity} = ${item.price * item.quantity} Ksh\n`;
-  });
-  if (cart.length > 0) {
-    message += `Delivery Fee: 50 Ksh\n`;
-  }
-  message += document.getElementById('cartTotal').textContent;
-  
-  window.location.href = `https://wa.me/254745798700?text=${encodeURIComponent(message)}`;
+document.getElementById("placeOrderBtn").addEventListener("click", function() {
+    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cartItems.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    let message = "Hello, I want to order:\n";
+    cartItems.forEach(item => {
+        message += `${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh\n`;
+    });
+    message += `Total: ${calculateTotal()} Ksh`;
+
+    let phoneNumber = "254745798700";  // Your WhatsApp number
+    let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    // Redirect to WhatsApp
+    window.location.href = whatsappURL;
+
+    // Clear the cart
+    localStorage.removeItem("cart");
+
+    // Refresh page after 2 seconds (giving time for redirect)
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
 });
+
+function calculateTotal() {
+    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+}
+
