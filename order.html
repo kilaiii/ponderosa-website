@@ -148,7 +148,38 @@
         <img src="chips.jpg" alt="Chips">
         <h3>Chips</h3>
         <p>Price: 100 Ksh</p>
-        <button class="add-to-cart" data-name="Chips" data-price="100">Add to Cart</button>
+       <button class="place-order-btn" id="placeOrder">Place Order</button>
+
+<script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    document.getElementById("placeOrder").addEventListener("click", function() {
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        let message = "Hello, I want to order:\n";
+        let subtotal = 0;
+
+        cart.forEach(item => {
+            message += `${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh\n`;
+            subtotal += item.price * item.quantity;
+        });
+
+        let deliveryFee = cart.length > 0 ? 50 : 0;
+        let total = subtotal + deliveryFee;
+
+        message += `Delivery Fee: ${deliveryFee} Ksh\nTotal: ${total} Ksh`;
+
+        let phoneNumber = "254745798700";
+        let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+        // Redirect to WhatsApp
+        window.location.href = whatsappURL;
+    });
+</script>
+
       </div>
       <div class="product-item">
         <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice (Small)">
