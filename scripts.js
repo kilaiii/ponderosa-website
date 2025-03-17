@@ -77,5 +77,20 @@ document.addEventListener('input', (e) => {
 
 // "Place Order" button handler
 document.getElementById('placeOrder').addEventListener('click', () => {
-  alert('Order placed! Total: ' + document.getElementById('cartTotal').textContent);
+  let message = 'I would like to place an order:\n';
+  cart.forEach(item => {
+    message += `${item.name} x${item.quantity} = ${item.price * item.quantity} Ksh\n`;
+  });
+  // Include delivery fee if applicable; assuming it's always 50 when cart is not empty
+  if (cart.length > 0) {
+    message += `Delivery Fee: 50 Ksh\n`;
+  }
+  // Extract the total from the cart total element
+  message += document.getElementById('cartTotal').textContent;
+  
+  // Encode the message for use in a URL
+  message = encodeURIComponent(message);
+  
+  // Redirect to WhatsApp with the pre-filled message (update the number as needed)
+  window.location.href = `https://wa.me/254745798700?text=${message}`;
 });
