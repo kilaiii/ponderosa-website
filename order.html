@@ -23,7 +23,7 @@
     .container {
       display: flex;
       flex-direction: column;
-      min-height: calc(100vh - 80px); /* subtract header height */
+      min-height: calc(100vh - 80px);
     }
     @media (min-width: 768px) {
       .container {
@@ -80,17 +80,15 @@
       padding: 20px;
       box-shadow: -2px 0 5px rgba(0,0,0,0.1);
     }
-    /* Desktop: Fixed Cart Sidebar */
     @media (min-width: 768px) {
       .cart-wrapper {
         position: fixed;
         right: 0;
-        top: 80px; /* header height */
+        top: 80px;
         height: calc(100vh - 80px);
         overflow-y: auto;
       }
     }
-    /* Mobile: Cart takes full width below products */
     @media (max-width: 767px) {
       .cart-wrapper {
         position: relative;
@@ -149,7 +147,6 @@
 <body>
   <header>Ponderosa - Order Your Favorites</header>
   <div class="container">
-    <!-- Left Column: Products -->
     <div class="products-container">
       <div class="product-item">
         <img src="chips.jpg" alt="Chips">
@@ -158,67 +155,47 @@
         <button class="add-to-cart" data-name="Chips" data-price="100">Add to Cart</button>
       </div>
       <div class="product-item">
-        <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice (Small)">
+        <img src="juice-small.jpg" alt="Juice (Small)">
         <h3>Juice (Small)</h3>
         <p>Price: 50 Ksh</p>
         <button class="add-to-cart" data-name="Juice (Small)" data-price="50">Add to Cart</button>
       </div>
-      <div class="product-item">
-        <img src="9b30ee9f51f0533e4b179e92a6ec9f4b00f44e0d.jpg" alt="Juice (Large)">
-        <h3>Juice (Large)</h3>
-        <p>Price: 100 Ksh</p>
-        <button class="add-to-cart" data-name="Juice (Large)" data-price="100">Add to Cart</button>
-      </div>
-      <div class="product-item">
-        <img src="Sausage.jpg" alt="Sausage">
-        <h3>Sausage</h3>
-        <p>Price: 50 Ksh</p>
-        <button class="add-to-cart" data-name="Sausage" data-price="50">Add to Cart</button>
-      </div>
     </div>
     
-    <!-- Right Column: Cart Sidebar -->
     <div class="cart-wrapper" id="cartWrapper">
       <div class="cart-header">My Cart</div>
-      <div class="cart-items" id="cartItems">
-        <!-- Cart items will be dynamically added here -->
-      </div>
+      <div class="cart-items" id="cartItems"></div>
       <div class="cart-total" id="cartTotal">Total: 0 Ksh</div>
       <button class="place-order-btn" id="placeOrder">Place Order</button>
     </div>
   </div>
   
   <script>
-<script>
-  // Your JavaScript code here.
-  document.getElementById('placeOrder').addEventListener('click', () => {
-    if (cart.length === 0) {
-      alert('Your cart is empty!');
-      return;
+    let cart = [];
+    function updateCart() {
+      let cartItems = document.getElementById('cartItems');
+      let cartTotal = document.getElementById('cartTotal');
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+        cartItems.innerHTML += `<div class='cart-item'>${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh</div>`;
+      });
+      cartTotal.textContent = `Total: ${total} Ksh`;
     }
-
-    let message = 'Hello, I want to order:\n';
-    let total = 0;
-    cart.forEach(item => {
-      let itemTotal = item.price * item.quantity;
-      message += `${item.name} (x${item.quantity}) - ${itemTotal} Ksh\n`;
-      total += itemTotal;
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', () => {
+        let name = button.dataset.name;
+        let price = parseInt(button.dataset.price);
+        let existing = cart.find(item => item.name === name);
+        if (existing) {
+          existing.quantity++;
+        } else {
+          cart.push({ name, price, quantity: 1 });
+        }
+        updateCart();
+      });
     });
-    message += `\nTotal: ${total} Ksh`;
-
-    let phoneNumber = '254712345678';  // Replace with your number.
-    let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-
-    window.open(whatsappURL, '_blank');
-
-    setTimeout(() => {
-      cart = [];
-      updateCart();
-      location.reload();
-    }, 2000);
-  });
-</script>
-
   </script>
 </body>
 </html>
