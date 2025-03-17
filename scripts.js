@@ -77,7 +77,6 @@ document.addEventListener('input', (e) => {
 
 // "Place Order" button handler
 document.getElementById('placeOrder').addEventListener('click', () => {
-  // Construct the order message
   let message = 'I would like to place an order:\n';
   cart.forEach(item => {
     message += `${item.name} x${item.quantity} = ${item.price * item.quantity} Ksh\n`;
@@ -85,12 +84,8 @@ document.getElementById('placeOrder').addEventListener('click', () => {
   if (cart.length > 0) {
     message += `Delivery Fee: 50 Ksh\n`;
   }
-  // Append the total (from cartTotal element)
   message += document.getElementById('cartTotal').textContent;
   
-  // Log the message to the console for debugging
-  console.log('WhatsApp order message:', message);
-  
-  // Redirect to WhatsApp with the message (using encodeURIComponent to handle newlines and spaces)
   window.location.href = `https://wa.me/254745798700?text=${encodeURIComponent(message)}`;
 });
+
