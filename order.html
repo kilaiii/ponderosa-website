@@ -160,34 +160,95 @@
     <button class="place-order-btn" id="placeOrder">Place Order</button>
 
 <script>
+    // Retrieve cart from localStorage or initialize an empty cart
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    updateCart();
 
-    document.getElementById("placeOrder").addEventListener("click", function() {
-        if (cart.length === 0) {
-            alert("Your cart is empty!");
-            return;
-        }
+    // Add event listener for "Add to Cart" buttons
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            const name = button.getAttribute('data-name');
+            const price = parseInt(button.getAttribute('data-price'));
 
-        let message = "Hello, I want to order:\n";
+            // Check if the item is already in the cart
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ name: name, price: price, quantity: 1 });
+            }
+
+            // Save to localStorage and update the cart display
+            saveCart();
+            updateCart();
+        });
+    });
+
+    // Function to save cart to localStorage
+    function saveCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    // Function to update cart display
+    function updateCart() {
+        const cartItemsDiv = document.getElementById('cartItems');
+        const cartTotalDiv = document.getElementById('cartTotal');
+
+        cartItemsDiv.innerHTML = ''; // Clear cart display
         let subtotal = 0;
 
-        cart.forEach(item => {
-            message += `${item.name} (x${item.quantity}) - ${item.price * item.quantity} Ksh\n`;
+        cart.forEach((item, index) => {
             subtotal += item.price * item.quantity;
+
+            cartItemsDiv.innerHTML += `
+                <div class="cart-item">
+                    <span><strong>${item.name}</strong> (x${item.quantity}) - ${item.price * item.quantity} Ksh</span>
+                    <div>
+                        <button class="decrease" data-index="${index}">-</button>
+                        <button class="increase" data-index="${index}">+</button>
+                    </div>
+                </div>
+            `;
         });
 
+        // Add delivery fee if the cart is not empty
         let deliveryFee = cart.length > 0 ? 50 : 0;
+        if (cart.length > 0) {
+            cartItemsDiv.innerHTML += `
+                <div class="cart-item">
+                    <span><strong>Delivery Fee</strong> - 50 Ksh</span>
+                </div>
+            `;
+        }
+
         let total = subtotal + deliveryFee;
+        cartTotalDiv.textContent = `Total: ${total} Ksh`;
 
-        message += `Delivery Fee: ${deliveryFee} Ksh\nTotal: ${total} Ksh`;
+        // Add event listeners for quantity adjustments
+        document.querySelectorAll('.decrease').forEach(button => {
+            button.addEventListener('click', (e) => {
+                let index = e.target.getAttribute('data-index');
+                if (cart[index].quantity > 1) {
+                    cart[index].quantity--;
+                } else {
+                    cart.splice(index, 1);
+                }
+                saveCart();
+                updateCart();
+            });
+        });
 
-        let phoneNumber = "254745798700";
-        let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-
-        // Redirect to WhatsApp
-        window.location.href = whatsappURL;
-    });
+        document.querySelectorAll('.increase').forEach(button => {
+            button.addEventListener('click', (e) => {
+                let index = e.target.getAttribute('data-index');
+                cart[index].quantity++;
+                saveCart();
+                updateCart();
+            });
+        });
+    }
 </script>
+
 
 
     </div>
