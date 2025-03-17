@@ -290,6 +290,16 @@
  
          // Redirect to WhatsApp
          window.location.href = whatsappURL;
+
+       // Clear the cart
+    cart = [];
+    saveCart();
+    updateCart();
+
+    // Refresh page after 2 seconds
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
      });
 </script>
 
