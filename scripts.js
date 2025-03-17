@@ -1,4 +1,5 @@
 let cart = [];
+let currentDeliveryFee = 50; // Global variable to hold the manually set delivery fee
 
 // Event listener for "Add to Cart" buttons
 document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -15,12 +16,11 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
   });
 });
 
-// Updated updateCart() function with delivery fee logic
+// Updated updateCart() function with manual delivery fee input
 function updateCart() {
-  console.log('updateCart() called'); // Debug message
   const cartItemsDiv = document.getElementById('cartItems');
   const cartTotalDiv = document.getElementById('cartTotal');
-  cartItemsDiv.innerHTML = ''; // Clear current items
+  cartItemsDiv.innerHTML = ''; // Clear current cart items
   
   let subtotal = 0;
   cart.forEach((item, index) => {
@@ -36,21 +36,27 @@ function updateCart() {
     `;
   });
   
-  // Add delivery fee if there is any item in the cart
-  let deliveryFee = (cart.length > 0) ? 50 : 0;
+  // If there are items in the cart, show the delivery fee input
   if (cart.length > 0) {
+    // If the input already exists, get its current value; otherwise, default to currentDeliveryFee
+    const existingInput = document.getElementById('deliveryFeeInput');
+    if (existingInput) {
+      currentDeliveryFee = parseInt(existingInput.value) || currentDeliveryFee;
+    }
     cartItemsDiv.innerHTML += `
       <div class="cart-item">
-        <span><strong>Delivery Fee</strong> - 50 Ksh</span>
+        <span><strong>Delivery Fee</strong>:</span>
+        <input type="number" id="deliveryFeeInput" value="${currentDeliveryFee}" min="0" style="width:60px; margin-left:10px;">
+        <span> Ksh</span>
       </div>
     `;
   }
   
-  let total = subtotal + deliveryFee;
+  let total = subtotal + (cart.length > 0 ? currentDeliveryFee : 0);
   cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
 }
 
-// Handle quantity adjustments in the cart
+// Event listener for quantity adjustments (for "-" and "+" buttons)
 document.getElementById('cartItems').addEventListener('click', (e) => {
   const index = e.target.getAttribute('data-index');
   if (e.target.classList.contains('decrease')) {
@@ -66,7 +72,15 @@ document.getElementById('cartItems').addEventListener('click', (e) => {
   updateCart();
 });
 
-// Place Order button handler
+// Listen for changes on the delivery fee input and update the cart accordingly
+document.addEventListener('input', (e) => {
+  if (e.target && e.target.id === 'deliveryFeeInput') {
+    currentDeliveryFee = parseInt(e.target.value) || 0;
+    updateCart();
+  }
+});
+
+// "Place Order" button handler
 document.getElementById('placeOrder').addEventListener('click', () => {
   alert('Order placed! Total: ' + document.getElementById('cartTotal').textContent);
 });
