@@ -1,5 +1,4 @@
 let cart = [];
-let currentDeliveryFee = 50; // Global variable to hold the manually set delivery fee
 
 // Event listener for "Add to Cart" buttons
 document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -16,7 +15,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
   });
 });
 
-// Updated updateCart() function with manual delivery fee input
+// updateCart() function that auto-adds a 50 Ksh delivery fee if cart is not empty
 function updateCart() {
   const cartItemsDiv = document.getElementById('cartItems');
   const cartTotalDiv = document.getElementById('cartTotal');
@@ -36,7 +35,7 @@ function updateCart() {
     `;
   });
   
-  // Automatically add delivery fee if the cart is not empty
+  // Automatically add delivery fee if there's at least one item
   let deliveryFee = (cart.length > 0) ? 50 : 0;
   if (cart.length > 0) {
     cartItemsDiv.innerHTML += `
@@ -49,7 +48,6 @@ function updateCart() {
   let total = subtotal + deliveryFee;
   cartTotalDiv.textContent = 'Total: ' + total + ' Ksh';
 }
-
 
 // Event listener for quantity adjustments (for "-" and "+" buttons)
 document.getElementById('cartItems').addEventListener('click', (e) => {
@@ -67,14 +65,6 @@ document.getElementById('cartItems').addEventListener('click', (e) => {
   updateCart();
 });
 
-// Listen for changes on the delivery fee input and update the cart accordingly
-document.addEventListener('input', (e) => {
-  if (e.target && e.target.id === 'deliveryFeeInput') {
-    currentDeliveryFee = parseInt(e.target.value) || 0;
-    updateCart();
-  }
-});
-
 // "Place Order" button handler
 document.getElementById('placeOrder').addEventListener('click', () => {
   let message = 'I would like to place an order:\n';
@@ -88,4 +78,3 @@ document.getElementById('placeOrder').addEventListener('click', () => {
   
   window.location.href = `https://wa.me/254745798700?text=${encodeURIComponent(message)}`;
 });
-
