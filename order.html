@@ -226,16 +226,18 @@
             } else {
                 cart.push({ name: name, price: price, quantity: 1 });
             }
-          if (cart.length > 0) {
-             document.getElementById("clearCart").style.display = "block";
-          } else {
-            document.getElementById("clearCart").style.display = "none";
-          }
-
-
-            // Save to localStorage and update the cart display
+        
+           // Save to localStorage and update the cart display
             saveCart();
             updateCart();
+          
+           // Conditionally display the Clear Cart button
+           if (cart.length > 0) {
+              document.getElementById("clearCart").style.display = "block";
+           } else {
+             document.getElementById("clearCart").style.display = "none";
+           }
+
         });
     });
 
