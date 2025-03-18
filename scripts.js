@@ -12,6 +12,12 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
     } else {
       cart.push({ name: name, price: price, quantity: 1 });
     }
+    if (cart.length > 0) {
+  document.getElementById("clearCart").style.display = "block";
+} else {
+  document.getElementById("clearCart").style.display = "none";
+}
+
     saveCart();
     updateCart();
   });
