@@ -137,6 +137,25 @@
   .decrease:hover, .increase:hover {
       background-color: gold;  /* Slightly darker yellow on hover */
   }
+    
+  /* Existing Place Order button styles (example) */
+  .place-order-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  /* Clear Cart specific styles */
+  .clear-cart-btn {
+    background-color: red; /* Change the button color to red */
+  }
+
 
   </style>
 
@@ -185,8 +204,9 @@
       <div class="cart-header">My Cart</div>
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-total" id="cartTotal">Total: 0 Ksh</div>
-    <button class="clear-cart-btn" id="clearCart">Clear Cart</button>
+  
     <button class="place-order-btn" id="placeOrder">Place Order</button>
+    <button class="clear-cart-btn" id="clearCart">Clear Cart</button>  
 
 <script>
     // Retrieve cart from localStorage or initialize an empty cart
@@ -350,5 +370,15 @@
       });
     }
   </script>
+
+ <!-- Place your JS code here, just before the closing body tag -->
+  <script>
+    document.getElementById("clearCart").addEventListener("click", function() {
+        cart = [];          // Clear the cart array
+        saveCart();         // Save the empty cart to localStorage
+        updateCart();       // Refresh the cart display
+    });
+  </script>
+  
 </body>
 </html>
